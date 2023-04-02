@@ -7,32 +7,35 @@
         <div class="loginbox-in">
           <div class="userbox">
             <i class="iconfont">&#xe633;</i>
-            <input class="user" id="user" v-model="name" placeholder="邮箱" />
+            <input class="user" id="user" v-model="email" placeholder="邮箱" />
           </div>
           <br />
+          
           <div class="pwdbox">
             <span class="iconfont">&#xe82b;</span>
             <input
               class="pwd"
               id="password"
-              v-model="pwd"
+              v-model="password"
               type="password"
-              placeholder="密码"
+              placeholder="修改后的密码"
             />
           </div>
-          <br />
-          <div class="pwdbox">
+          
+
+          <div class="verbox">
             <span class="iconfont">&#xe82b;</span>
             <input
-              class="pwd"
-              id="re_password"
-              v-model="repwd"
-              type="password"
-              placeholder="确认密码"
+              class="pwd2"
+              id="password"
+              v-model="email_code"
+              placeholder="验证码"
             />
+            <button class="getVer" @click="getTestCode()">获取验证码</button>
           </div>
+          <br />
           <div class="verify">
-            <button class="verifybtn">验证邮箱</button>
+            <button class="verifybtn" @click="changePassword()">修改密码</button>
           </div>
 
           <br />
@@ -50,34 +53,96 @@
   </div>
 </template>
 <script>
+import axios from "axios";
 export default {
   name: "Register",
   props: {},
   data() {
     return {
-      name: "",
-      tel: "",
-      pwd:''
+      email: "",
+      password: "",
+      email_code:''
     };
   },
   methods: {
-    next() {
-
+    next(){
       this.$router.push({ path: "/verify" });
-      
     },
     toLogin(){
       this.$router.push({ path: "/Login" });
+    },
+    getTestCode() {
+      axios({
+        method: "post", //请求方式
+        url: "http://192.168.1.122:8084/api/v1/email/sendEmail", //请求的接口
+        data: {
+          //请求传递的数据
+          email: this.email,
+        },
+        //其他相关配置
+      })
+        .then((res) => {
+          console.log(res); //请求成功的结果
+        })
+        .catch((error) => {
+          console.log(error); //请求失败的结果
+        });
+    },
+    changePassword(){
+      axios({
+        method:'post',
+        url: "http://192.168.1.122:8084/api/v1/user/modifyPassword",
+        data:{
+          password:this.password,
+          email_code:this.email_code
+        }
+      }).then((res)=>{
+        console.log(res);
+      }).then((error)=>{
+        console.log(error);
+      })
     }
   },
 };
 </script>
-<style>
+<style scoped>
 @font-face {
-  font-family: 'iconfont';  /* Project id 3967734 */
-  src: url('//at.alicdn.com/t/c/font_3967734_jjtnlbg5j6.woff2?t=1679405534052') format('woff2'),
-       url('//at.alicdn.com/t/c/font_3967734_jjtnlbg5j6.woff?t=1679405534052') format('woff'),
-       url('//at.alicdn.com/t/c/font_3967734_jjtnlbg5j6.ttf?t=1679405534052') format('truetype');
+  font-family: "iconfont"; /* Project id 3967734 */
+  src: url("//at.alicdn.com/t/c/font_3967734_jjtnlbg5j6.woff2?t=1679405534052")
+      format("woff2"),
+    url("//at.alicdn.com/t/c/font_3967734_jjtnlbg5j6.woff?t=1679405534052")
+      format("woff"),
+    url("//at.alicdn.com/t/c/font_3967734_jjtnlbg5j6.ttf?t=1679405534052")
+      format("truetype");
+}
+.verbox {
+  height: 30px;
+  width: 215px;
+  position: absolute; 
+  top: 190px;
+  display: flex;
+  margin-left: 25px;
+}
+.verify{
+  position: absolute;
+  top: 250px;
+  left: 30%;
+}
+.verbox input{
+  width: 100px;
+}
+.getVer{
+  width: 190px;
+  height: 30px;
+  font-size: 14px;
+  color: black;
+  border: none;
+  background-color: #89ab9e;
+  position: relative;
+  top: -5px;
+}.getVer:hover {
+  font-weight: bold;
+  cursor: pointer;
 }
 .loginbox {
   display: flex;
@@ -89,7 +154,7 @@ export default {
   transform: translate(-50%, -50%);
   box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 #4e655d;
 }
-.verifybtn{
+.verifybtn {
   background-color: transparent;
   margin-top: 20px;
   border-bottom: 1px solid black;
@@ -97,11 +162,12 @@ export default {
 .loginbox-in {
   background-color: #89ab9e;
   width: 240px;
+  position: relative;
 }
 .userbox {
-  margin-top: 120px;
+  margin-top: 80px;
   height: 30px;
-  width: 230px;
+  width: 225px;
   display: flex;
   margin-left: 25px;
 }
@@ -110,14 +176,24 @@ export default {
   width: 225px;
   display: flex;
   margin-left: 25px;
+position: relative;
+top: 0px;
+}
+.repwdbox {
+  height: 30px;
+  width: 225px;
+  display: flex;
+  margin-left: 25px;
+  position: relative;
+  top: -15px;
 }
 
 .background {
   width: 570px;
-  background-image: url("../assets/微信图片_20230321170449.png");
+  background-image: url("../../assets/微信图片_20230321170449.png");
   background-size: cover;
-  background-position: 55% ;
- 
+  background-position: 55%;
+
   font-family: sans-serif;
 }
 .title {
@@ -130,6 +206,10 @@ export default {
   font-size: 21px;
   transition: all 0.4s ease-in-out;
   cursor: pointer;
+}
+.iconfont{
+  position: relative;
+  top: -10px;
 }
 .uesr-text {
   position: left;
@@ -144,6 +224,7 @@ input {
   font-size: 15px;
   color: #445b53;
   font-weight: bold;
+  width: 80%;
 }
 /* input::-webkit-input-placeholder{
   color:#E9E9E9;
@@ -226,6 +307,8 @@ input:-webkit-autofill::first-line {
 .register_btn {
   background-color: transparent; /* Green */
   border: none;
+  position: relative;
+  top: 100px;
   text-decoration: none;
   font-size: 12px;
   /* border-radius: 20px;   */
@@ -240,7 +323,6 @@ input:-webkit-autofill::first-line {
   font-weight: bold;
   cursor: pointer;
 }
-
 
 .iconfont {
   font-family: "iconfont" !important;

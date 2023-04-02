@@ -3,10 +3,11 @@ import Router from "vue-router";
 
 //组件模块
 
-import Login from "@/components/Login";
-import verify from "@/components/verify";
-import Register from "@/components/Register";
-import home from '@/components/home'
+import Login from "@/view/pages/Login";
+import verify from "@/view/pages/verify";
+import Register from "@/view/pages/Register";
+import home from '@/view/home'
+import changePwd from '@/view/pages/changePwd'
 Vue.use(Router);
 
 export default new Router({
@@ -31,6 +32,11 @@ export default new Router({
       path: "/home",
       name: "home",
       component: home,
+    },
+    {
+      path: "/changePwd",
+      name: "changePwd",
+      component: changePwd,
     },
   ],
   mode: "history",

@@ -6,41 +6,121 @@
           <!-- 头像 -->
           <div class="img">
             <a href=""><img src="../assets/logo.png" alt="" /></a>
+            
           </div>
           <!-- 信息 -->
           <div class="news">
-            <button><i></i>消息</button>
+            <button @click="showNews()"><i></i>消息</button>
           </div>
-          <!-- toux -->
           <div class="addressList">
-            <button><i></i>通讯录</button>
+            <button @click="showAddressList()"><i></i>通讯录</button>
           </div>
-          <!-- <div><button><i></i></button></div>
-          <div><button><i></i></button></div> -->
+          <!-- 多个用户身份 -->
+          <ul class="accountList"></ul>
+          <!-- 登出 -->
+          <div class="logOut"><button>退出登录</button></div>
         </div>
         <div class="asideRight">
-          <div class="allNews"><button>全部</button></div>
-          <!-- 消息列表 -->
-          <div class="newsList"><button>刘一琛</button></div>
+         <news v-show="this.isNews==1"></news>
+         <addressList  v-show="this.isAddressList==1"></addressList>
         </div>
       </el-aside>
-      <el-main>Main</el-main>
+      <el-main>
+        <div class="newsContainer">
+          <div class="top">{{}}</div>
+          <div class="mid"></div>
+          <div class="bot"></div>
+        </div>
+      </el-main>
     </el-container>
   </div>
 </template>
 
 <script>
-export default {};
+import news from '@/view/pages/news'
+import addressList from '@/view/pages/addressList'
+export default {
+  name:'home',
+  data(){
+    return {
+      isNews:1,
+      isAddressList:0,
+      userList:[]
+    }
+  },
+  components:{
+    news,
+    addressList
+  },
+  methods:{
+    showNews(){
+      this.isNews = 1
+      this.isAddressList = 0
+    },
+    showAddressList(){
+      this.isNews = 0
+      this.isAddressList = 1
+    },
+    logOut(){
+      axios({
+        method: "get", //请求方式
+        url: "http://127.0.0.1:8084/api/v1/user/logout", //请求的接口
+        data: {
+          //请求传递的数据
+          token: localStorage.getItem('token'),
+        },
+        //其他相关配置
+      })
+        .then((res) => {
+          console.log(res); //请求成功的结果
+        })
+        .catch((error) => {
+          console.log(error); //请求失败的结果
+        });
+    }
+  }
+};
 </script>
 
 <style lang='css' scoped>
 .el-container {
   width: 100%;
 }
+       
+.newsContainer{
+  background-color: rgb(55, 0, 255);
+  width: 100%;
+  height: 100%;
+
+}
 .newsList button {
   width: 100%;
   height: 70px;
   border-radius: 10px;
+}
+.top{
+  width: 100%;
+  height: 100px;
+  background-color: black;
+
+}
+.mid{
+  width: 100%;
+  height: 74.5%;
+  background-color: pink;
+}
+.bot{
+  width: 100%;
+  height: 100px;
+  background-color: black;
+  
+}
+.logOut button{
+  height: 100px;
+  background-color: rgb(57, 70, 101);
+  border: none;
+  
+
 }
 .el-aside {
   background-color: #d3dce6;
@@ -65,7 +145,7 @@ export default {};
   margin: 0px;
 }
 .el-main {
-  background-color: black;
+
   color: #333;
   text-align: center;
   line-height: 160px;

@@ -1,23 +1,29 @@
 <template>
   <div id="app">
-    <!-- <router-view></router-view> -->
-    <home></home>
+    <router-view></router-view>
+    <!-- <home></home> -->
     <!-- <Register></Register> -->
   </div>
 </template>
 
 <script>
-import Login from './components/Login.vue'
-import verify from './components/verify.vue'
-import Register from './components/Register.vue';
-import home from './components/home.vue'
+import Login from '@/view/pages/Login'
+import verify from '@/view/pages/verify'
+import Register from '@/view/pages/Register';
+import home from '@/view/home'
+import changePwd from '@/view/pages/changePwd'
+import news from '@/view/pages/news'
+import addressList from '@/view/pages/addressList'
 export default {
   name: 'App',
   components: {
     Login,
     verify,
     Register,
-    home
+    home,
+    changePwd,
+    addressList,
+    news
   }
 }
 </script>
